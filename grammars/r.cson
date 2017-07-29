@@ -8,15 +8,16 @@
   'Rprofile'
   'Rhistory'
 ]
+'firstLineMatch': '^#![ \\t]*/.*\\bRscript\\b'
 'patterns': [
+  {
+    'include': '#operators'
+  }
   {
     'include': '#comments'
   }
   {
     'include': '#constants'
-  }
-  {
-    'include': '#operators'
   }
   {
     'include': '#strings'
@@ -62,7 +63,7 @@
         'name': 'keyword.operator.assignment.r'
       '3':
         'name': 'keyword.control.r'
-    'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*(<-)\\s*(function)'
+    'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*(<-|=)\\s*(function)(\\()'
     'name': 'meta.function.r'
   }
   {
@@ -85,13 +86,17 @@
         'name': 'keyword.operator.assignment.r'
     'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*(=)(?=[^=])'
   }
+  # {
+  #   'match': '\\b([\\d_][[0-9A-Za-z]._]+)\\b'
+  #   'name': 'invalid.illegal.variable.other.r'
+  # }
   {
-    'match': '\\b([\\d_][[0-9A-Za-z]._]+)\\b'
-    'name': 'invalid.illegal.variable.other.r'
-  }
-  {
-    'match': '\\b([[0-9A-Za-z]_]+)(?=::)'
-    'name': 'entity.namespace.r'
+    'match': '\\b([[0-9A-Za-z]_]+)(::)'
+    'captures':
+      '1':
+        'name': 'entity.namespace.r'
+      '2':
+        'name': 'keyword.operator.namespace.r'
   }
   {
     'begin': '\\{'
@@ -109,9 +114,14 @@
       }
     ]
   }
+  {
+    'include': '#generic_names'
+  }
+  {
+    'include': '#illegal_names'
+  }
 ]
 'repository':
-  # 'functions':
   'comments':
     'patterns': [
       {
@@ -152,10 +162,15 @@
     ]
   'constants':
     'patterns': [
-      # {
-      #   'match': '\\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\\.?[0-9]*)|(\\.[0-9]+))((e|E)(\\+|-)?[0-9]+)?)(i|L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b'
-      #   'name': 'constant.numeric.r'
-      # }
+      {
+        'match': '\\.[0-9]+((e|E)(\\+|-)?[0-9]+)?(i|L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b'
+        'name': 'constant.numeric.r'
+        'comment': 'to color the period in front of .123'
+      }
+      {
+        'match': '\\b((0(x|X)[0-9a-fA-F]*)|((\\.[0-9]+)|([0-9]+\\.?[0-9]*))((e|E)(\\+|-)?[0-9]+)?)(i|L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b'
+        'name': 'constant.numeric.r'
+      }
       {
         'match': '\\b(T|F|TRUE|FALSE|NULL|NA|Inf|NaN)\\b'
         'name': 'constant.language.r'
@@ -165,23 +180,75 @@
         'name': 'support.constant.misc.r'
       }
     ]
+  'function_name':
+    'patterns': [
+      {
+        'include': '#builtin_exceptions'
+      }
+      {
+        'include': '#builtin_functions'
+      }
+      {
+        'include': '#builtin_types'
+      }
+      {
+        'include': '#generic_names'
+      }
+    ]
+  'generic_names':
+    'match': '\\b([a-zA-Z.](?![0-9])[a-zA-Z0-9._]*)'
+    'name': 'keyword.variable.name.test.kyle.r'
+  'illegal_names':
+    'patterns': [
+      {
+        'match': '\\b(if|else|repeat|while|function|for|in|next|break|TRUE|FALSE|NULL|Inf|NaN|NA|NA_integer_|NA_real_|NA_complex_|NA_character_|\\.\\.\\.|\\.\\.[0-9]+)\\b'
+        'name': 'invalid.illegal.name.reserved.r'
+      }
+      # {
+      #   'match': '\\b([^a-zA-Z.][a-zA-Z0-9_.]*)\\s+(<-|=)'
+      #   'name': 'invalid.illegal.name.r'
+      #   'comment': 'must start with a letter or dot'
+      # }
+      # {
+      #   'match': '(\\s|\\n)+([.][0-9][a-zA-Z0-9_.]*)\\s+(<-|=)'
+      #   'name': 'invalid.illegal.name.r'
+      #   'comment': 'if it starts with a dot, it can\'t be followed by a number'
+      # }
+    ]
+  'keyword_arguments':
+    'begin': '\\b([a-zA-Z_][a-zA-Z_0-9]*)\\s*(=)(?!=)'
+    'beginCaptures':
+      '1':
+        'name': 'variable.parameter.function.python'
+      '2':
+        'name': 'keyword.operator.assignment.python'
+    'end': '\\s*(?:(,)|(?=$\\n?|[\\)\\:]))'
+    'endCaptures':
+      '1':
+        'name': 'punctuation.separator.parameters.python'
+    'patterns': [
+      {
+        'include': '$self'
+      }
+    ]
   'operators':
     'patterns': [
+      {
+        'match': '(<-|<<-|->>|->)'
+        'name': 'keyword.operator.assignment.r'
+      }
       {
         'match': '(==|!=|<>|<|>|<=|>=)'
         'name': 'keyword.operator.comparison.r'
       }
       {
-        'match': '(::)'
-        'name': 'keyword.operator.namespace.r'
+        'match': '='
+        'name': 'keyword.operator.assignment.r'
+        'comment': 'separate so that == is treated as one construct for ligature purposes'
       }
       {
         'match': '(\\-|\\+|\\*|\\/|%\\/%|%%|%\\*%|%in%|%o%|%x%|%>%|\\^)'
         'name': 'keyword.operator.arithmetic.r'
-      }
-      {
-        'match': '(=|<-|<<-|->>|->)'
-        'name': 'keyword.operator.assignment.r'
       }
       {
         'match': '(!|&&|&|\\|\\||\\|)'
@@ -190,6 +257,12 @@
       {
         'match': '(\\.\\.\\.|\\$|@|:|\\~)'
         'name': 'keyword.other.r'
+      }
+    ]
+  'regular_expressions':
+    'patterns': [
+      {
+        'include': 'source.regexp.r'
       }
     ]
   'strings':
