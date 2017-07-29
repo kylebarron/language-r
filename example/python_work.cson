@@ -290,16 +290,6 @@
       }
     ]
   }
-  {
-    'captures':
-      '1':
-        'name': 'punctuation.definition.list.begin.python'
-      '2':
-        'name': 'meta.empty-list.python'
-      '3':
-        'name': 'punctuation.definition.list.end.python'
-    'match': '(\\[)(\\s*(\\]))\\b'
-  }
   ## ADAPT THIS FOR c() for making lists/vectors in R
   {
     'begin': '(\\[)'

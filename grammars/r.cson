@@ -49,12 +49,12 @@
     'match': '\\b(for|while)\\b'
     'name': 'keyword.control.repeat.r'
   }
-  {
-    'captures':
-      '1':
-        'name': 'entity.name.function.r'
-    'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\('
-  }
+  # {
+  #   'captures':
+  #     '1':
+  #       'name': 'entity.name.function.r'
+  #   'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\('
+  # }
   {
     'captures':
       '1':
@@ -113,6 +113,49 @@
         'include': '$self'
       }
     ]
+  }
+  {
+    'comment': 'empty vector c() NON FUNCTIONAL'
+    'captures':
+      '1':
+        'name': 'punctuation.definition.list.begin.r'
+      '2':
+        'name': 'meta.empty-list.r'
+      '3':
+        'name': 'punctuation.definition.list.end.r'
+    'match': '(c\\()(\\s*(\\)))\\b'
+  }
+  {
+    'comment': 'NON FUNCTIONAL'
+    'begin': '(c\\()'
+    'beginCaptures':
+      '1':
+        'name': 'punctuation.definition.list.begin.r'
+    'end': '(\\))'
+    'endCaptures':
+      '1':
+        'name': 'punctuation.definition.list.end.r'
+    'name': 'meta.structure.list.r'
+    'patterns': [
+      {
+        'begin': '(?<=\\(|\\,)\\s*(?![\\),])'
+        'contentName': 'meta.structure.list.item.r'
+        'end': '\\s*(?:(,)|(?=\\)))'
+        'endCaptures':
+          '1':
+            'name': 'punctuation.separator.list.r'
+        'patterns': [
+          {
+            'include': '$self'
+          }
+        ]
+      }
+    ]
+  }
+
+  # Functions that use Regular Expressions:
+  {
+    
   }
   {
     'include': '#generic_names'
