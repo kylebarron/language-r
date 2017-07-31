@@ -129,29 +129,53 @@
       }
     ]
   }
-  {
-    'begin': '(?<=\\)|\\])\\s*(\\()'
-    'beginCaptures':
-      '1':
-        'name': 'punctuation.definition.arguments.begin.python'
-    'contentName': 'meta.function-call.arguments.python'
-    'end': '(\\))'
-    'endCaptures':
-      '1':
-        'name': 'punctuation.definition.arguments.end.python'
-    'name': 'meta.function-call.python'
-    'patterns': [
-      {
-        'include': '#keyword_arguments'
-      }
-      {
-        'include': '$self'
-      }
-    ]
-  }
-
-
   # Functions that use Regular Expressions:
+  {
+    'begin': ''
+  }
+  # Functions with pattern in first spot:
+    grep
+    grepl
+    regexpr
+    gregexpr
+    sub
+    gsub
+    regexec
+    
+    stringr::regex()
+  # Functions with pattern in second spot:
+    strsplit
+    
+    stri_count[_a-z]*()
+    stri_detect[_a-z]*()
+    stri_extract[_a-z]*()
+    stri_locate[_a-z]*()
+    stri_match[_a-z]*()
+    stri_replace[_a-z]*()
+    stri_split[_a-z]*()
+    stri_startswith[_a-z]*()
+    stri_endswith[_a-z]*()
+    stri_subset[_a-z]*()
+    
+    
+    str_count
+    str_detect
+    str_extract(_all)?
+    str_locate(_all)?
+    str_match(_all)?
+    str_replace (_all)?
+    str_split
+    str_subset
+    str_which
+    str_view(_all)?
+    
+    
+    
+    
+    
+    
+
+
 
   # {
   #   'include': '#generic_names'
