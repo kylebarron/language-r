@@ -143,6 +143,10 @@
   {
     'include': '#character-class'
   }
+  {
+    'match': '[a-zA-Z0-9_]+'
+    'name': 'string.quoted.r'
+  }
 ]
 'repository':
   'character-class':

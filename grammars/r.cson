@@ -27,23 +27,20 @@
     'patterns': [
       # first, look for if there's an element that says pattern = " "
       {
-        
-        'begin': '(pattern)\\s+(=)\\s+(?=("|\'))'
+        'begin': '(pattern)\\s*(=)\\s*(?=("|\'))'
         'beginCaptures':
           '1':
             'name': 'variable.parameter.function.r'
           '2':
             'name': 'keyword.operator.assignment.r'
-        'end': '\\s*(?:(,)|(?=$\\n?|[\\)\\:]))'
+        'end': '\\s*(,|(?=\\))|\\n)'
+        # 'end': '\\s*(?:(,)|(?=$\\n?|[\\)\\:]))'
         'endCaptures':
           '1':
             'name': 'punctuation.separator.parameters.r'
         'patterns': [
           {
             'include': '#regular_expressions'
-          }
-          {
-            'include': '#strings'
           }
         ]
       }
@@ -58,9 +55,6 @@
           {
             'include': '#regular_expressions'
           }
-          {
-            'include': '#strings'
-          }
         ]
       }
       {
@@ -74,18 +68,52 @@
   # Functions with pattern in second spot:
   {
     'comment': 'Regex functions with pattern in second spot by default'
+    'comment': 'This begin/end gets the function name and the outer parentheses'
     'begin': '\\b(strsplit|stri_(count|detect|extract|locate|match|replace|split|startswith|endswith|subset)[_a-z]*|
     str_(count|detect|split|subset|which)|str_(extract|locate|match|replace|view)(_all)?)(\\()'
     'beginCaptures':
       '1':
         'name': 'entity.name.function.r'
-      '5':
+      '6':
         'name': 'punctuation.definition.entity.begin.r'
     'end': '(\\))'
     'endCaptures':
       '1':
         'name': 'punctuation.definition.entity.end.r'
-    'name': 'meta.function.r'  
+    'name': 'meta.function.r'
+    'patterns': [
+      {
+        'comment': 'This begin should get the first function argument'
+        'comment': 'This '
+        'begin': '(.+)(,)'
+        'beginCaptures':
+          '1':
+            'patterns': [
+              {
+                'include': '#keyword_arguments'
+              }
+              {
+                'include': '#operators'
+              }
+            ]
+        'end': '(?=\\))'
+        'patterns': [
+          'begin': '(?=("|\'))'
+          'end': '(?![\\w])'
+          'endCaptures':
+            '1':
+              'name': 'punctuation.separator.parameters.r'
+          'patterns': [
+            {
+              'include': '#regular_expressions'
+            }
+          ]
+        ]
+      }
+      {
+        'include': '$self'
+      }
+    ] 
   }
     
 
@@ -382,6 +410,20 @@
       '1':
         'name': 'punctuation.separator.parameters.r'
     'patterns': [
+      # Unclear if I need to do includes by type or if $self is ok
+      # Had issues with regex strings everywhere, but I had included #regular_expressions in #strings
+      # {
+      #   'include': '#constants'
+      # }
+      # {
+      #   'include': '#strings'
+      # }
+      # {
+      #   'include': '#comments'
+      # }
+      # {
+      #   'include': '#operators'
+      # }
       {
         'include': '$self'
       }
@@ -496,9 +538,6 @@
             'include': '#escaped_char'
           }
           {
-            'include': '#regular_expressions'
-          }
-          {
             'match': '\\\\.'
             'name': 'constant.character.escape.r'
           }
@@ -528,9 +567,6 @@
           }
           {
             'include': '#escaped_char'
-          }
-          {
-            'include': '#regular_expressions'
           }
           {
             'match': '\\\\.'
