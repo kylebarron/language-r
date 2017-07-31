@@ -11,40 +11,36 @@
 'firstLineMatch': '^#![ \\t]*/.*\\bRscript\\b'
 'patterns': [
   {
-    'include': '#operators'
-  }
-  {
-    'include': '#comments'
+    'include': '#line_comments'
   }
   {
     'include': '#constants'
-  }
-  {
-    'include': '#strings'
-  }
-  {
-    'match': '\\b(logical|numeric|character|complex|matrix|array|data\\.frame|list|factor)(?=\\s*\\()'
-    'name': 'storage.type.r'
-  }
-  {
-    'match': '\\b(function|break|next|return|in|invisible)\\b'
-    'name': 'keyword.control.r'
   }
   {
     'match': '\\b(library|require)\\b'
     'name': 'keyword.control.import.r'
   }
   {
+    'include': '#control_constructs'
+  }
+  {
+    'include': '#operators'
+  }
+  
+  
+  {
+    'include': '#strings'
+  }
+  {
+    'match': '\\b(function|break|next|return|in|invisible)\\b'
+    'name': 'keyword.control.r'
+  }
+  {
     'comment': 'keywords that delimit an exception'
     'match': '\\b(try|tryCatch|withCallingHandlers|signalCondition|simpleError|simpleWarning|simpleMessage)\\b'
     'name': 'keyword.control.exception.r'
   }
-  # {
-  #   'comment': 'keywords that alter flow from within a block'
-  #   'name': 'keyword.control.statement.r'
-  #   'match': '\\b(with|break|continue|pass|return|yield|await)\\b'
-  # }
-
+  # TO WORK ON !!!!
   {
     'captures':
       '1':
@@ -62,6 +58,7 @@
     'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*(<-|=)\\s*(function)(\\()'
     'name': 'meta.function.r'
   }
+  ## END TO WORK ON
   {
     'captures':
       '1':
@@ -74,20 +71,20 @@
   {
     'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*\\('
   }
-  {
-    'captures':
-      '1':
-        'name': 'variable.parameter.r'
-      '2':
-        'name': 'keyword.operator.assignment.r'
-    'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*(=)(?=[^=])'
-  }
+  # {
+  #   'captures':
+  #     '1':
+  #       'name': 'variable.parameter.r'
+  #     '2':
+  #       'name': 'keyword.operator.assignment.r'
+  #   'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*(=)(?=[^=])'
+  # }
   # {
   #   'match': '\\b([\\d_][[0-9A-Za-z]._]+)\\b'
   #   'name': 'invalid.illegal.variable.other.r'
   # }
   {
-    'match': '\\b([[0-9A-Za-z]_]+)(::)'
+    'match': '\\b([0-9A-Za-z_.]+)(::)'
     'captures':
       '1':
         'name': 'entity.namespace.r'
@@ -132,62 +129,56 @@
       }
     ]
   }
-
-  # Functions that use Regular Expressions:
   {
-    
-  }
-  {
-    'include': '#generic_names'
-  }
-  {
-    'include': '#illegal_names'
-  }
-  {
-    'include': '#control_constructs'
-  }
-]
-'repository':
-  'comments':
+    'begin': '(?<=\\)|\\])\\s*(\\()'
+    'beginCaptures':
+      '1':
+        'name': 'punctuation.definition.arguments.begin.python'
+    'contentName': 'meta.function-call.arguments.python'
+    'end': '(\\))'
+    'endCaptures':
+      '1':
+        'name': 'punctuation.definition.arguments.end.python'
+    'name': 'meta.function-call.python'
     'patterns': [
       {
-        'captures':
-          '1':
-            'name': 'comment.line.pragma.r'
-          '2':
-            'name': 'entity.name.pragma.name.r'
-        'match': '^(#pragma[ \\t]+mark)[ \\t](.*)'
-        'name': 'comment.line.pragma-mark.r'
+        'include': '#keyword_arguments'
       }
       {
-        'begin': '#\'[ ]?(@[a-zA-Z0-9]+)'
-        'beginCaptures':
-          '0':
-            'name': 'punctuation.definition.comment.roxygen.r'
-          '1':
-            'name': 'keyword.roxygen.r'
-        'end': '\\n'
-        'name': 'comment.line.number-sign.roxygen.r'
-      }
-      {
-        'begin': '#\''
-        'beginCaptures':
-          '0':
-            'name': 'punctuation.definition.comment.roxygen.r'
-        'end': '\\n'
-        'name': 'comment.line.number-sign.roxygen.r'
-      }
-      {
-        'begin': '#'
-        'beginCaptures':
-          '0':
-            'name': 'punctuation.definition.comment.r'
-        'end': '\\n'
-        'name': 'comment.line.number-sign.r'
+        'include': '$self'
       }
     ]
+  }
+
+
+  # Functions that use Regular Expressions:
+
+  # {
+  #   'include': '#generic_names'
+  # }
+  # {
+  #   'include': '#illegal_names'
+  # }
+]
+'repository':
+  'builtin_functions':
+    'match': '\\b(logical|numeric|character|complex|matrix|array|data\\.frame|list|factor)(?=\\s*\\()'
+    'name': 'support.type.r'    
+  'builtin_types':
+    'match': '\\b(logical|numeric|character|complex|matrix|array|data\\.frame|list|factor)(?=\\s*\\()'
+    'name': 'support.type.r'
   'constants':
     'patterns': [
+      {
+        'match': '\\b(?i:(0x\\h*)L)'
+        'name': 'constant.numeric.integer.long.hexadecimal.python'
+      }
+      {
+        'match': '\\b(?i:(0x\\h*))'
+        'name': 'constant.numeric.integer.hexadecimal.python'
+      }
+
+      
       {
         'match': '\\.[0-9]+((e|E)(\\+|-)?[0-9]+)?(i|L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b'
         'name': 'constant.numeric.r'
@@ -196,6 +187,7 @@
       {
         'match': '\\b((0(x|X)[0-9a-fA-F]*)|((\\.[0-9]+)|([0-9]+\\.?[0-9]*))((e|E)(\\+|-)?[0-9]+)?)(i|L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b'
         'name': 'constant.numeric.r'
+        'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Literal-constants'
       }
       {
         'match': '\\b(T|F|TRUE|FALSE|NULL|NA_integer_|NA_real_|NA_complex_|NA_character_|NA|Inf|NaN)\\b'
@@ -244,11 +236,53 @@
         'name': 'keyword.control.r'
       }
     ]
-  'function_name':
+  'entity_name_function':
     'patterns': [
       {
-        'include': '#builtin_exceptions'
+        'include': '#illegal_names'
       }
+      {
+        'include': '#generic_names'
+      }
+    ]
+  'escaped_char':
+    'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
+    'captures':
+      '1':
+        'name': 'constant.character.escape.hex.r'
+      '2':
+        'name': 'constant.character.escape.octal.r'
+      '3':
+        'name': 'constant.character.escape.newline.r'
+      '4':
+        'name': 'constant.character.escape.backlash.r'
+      '5':
+        'name': 'constant.character.escape.double-quote.r'
+      '6':
+        'name': 'constant.character.escape.single-quote.r'
+      '7':
+        'name': 'constant.character.escape.bell.r'
+      '8':
+        'name': 'constant.character.escape.backspace.r'
+      '9':
+        'name': 'constant.character.escape.formfeed.r'
+      '10':
+        'name': 'constant.character.escape.return.r'
+      '11':
+        'name': 'constant.character.escape.tab.r'
+      '12':
+        'name': 'constant.character.escape.vertical-tab.r'
+    'match': '(\\\\x[0-9A-Fa-f]{1,2})|(\\\\[0-7]{3})|(\\\\\\n)|(\\\\\\\\)|(\\\\\\")|(\\\\\')|(\\\\a)|(\\\\b)|(\\\\f)|(\\\\r)|(\\\\t)|(\\\\v)'
+  'escaped_unicode_char':
+    'captures':
+      '13':
+        'name': 'constant.character.escape.unicode.16-bit-hex.r'
+      '14':
+        'name': 'constant.character.escape.unicode.32-bit-hex.r'
+    'match': '(\\\\u\\{?[0-9A-Fa-f]{4}\\}?)|(\\\\U\\{?[0-9A-Fa-f]{8}\\}?)'
+    'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
+  'function_name':
+    'patterns': [
       {
         'include': '#builtin_functions'
       }
@@ -260,13 +294,15 @@
       }
     ]
   'generic_names':
-    'match': '\\b([a-zA-Z.](?![0-9])[a-zA-Z0-9._]*)'
-    'name': 'keyword.variable.name.test.kyle.r'
+    'match': '([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*'
+    # 'name': 'keyword.variable.name.test.kyle.r'
+    'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Identifiers'
   'illegal_names':
     'patterns': [
       {
         'match': '\\b(if|else|repeat|while|function|for|in|next|break|TRUE|FALSE|NULL|Inf|NaN|NA|NA_integer_|NA_real_|NA_complex_|NA_character_|\\.\\.\\.|\\.\\.[0-9]+)\\b'
         'name': 'invalid.illegal.name.reserved.r'
+        'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Reserved-words'
       }
       # {
       #   'match': '\\b([^a-zA-Z.][a-zA-Z0-9_.]*)\\s+(<-|=)'
@@ -280,19 +316,67 @@
       # }
     ]
   'keyword_arguments':
-    'begin': '\\b([a-zA-Z_][a-zA-Z_0-9]*)\\s*(=)(?!=)'
+    'begin': '\\b(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*(=)(?!=)'
     'beginCaptures':
       '1':
-        'name': 'variable.parameter.function.python'
-      '2':
-        'name': 'keyword.operator.assignment.python'
+        'name': 'variable.parameter.function.r'
+      '4':
+        'name': 'keyword.operator.assignment.r'
     'end': '\\s*(?:(,)|(?=$\\n?|[\\)\\:]))'
     'endCaptures':
       '1':
-        'name': 'punctuation.separator.parameters.python'
+        'name': 'punctuation.separator.parameters.r'
     'patterns': [
       {
         'include': '$self'
+      }
+    ]
+  'line_comments':
+    'patterns': [
+      {
+        'begin': '(^[ \\t]+)?(?=#\'?)'
+        'beginCaptures':
+          '1':
+            'name': 'punctuation.whitespace.comment.leading.r'
+        'end': '(?!\\G)'
+        'patterns': [
+          {
+            'begin': '#\'?'
+            'beginCaptures':
+              '0':
+                'name': 'punctuation.definition.comment.r'
+            'end': '\\n'
+            'name': 'comment.line.number-sign.r'
+          }
+        ]        
+      }
+      {
+        'begin': '(^[ \\t]+)?(?=#\'[ ]*(@[a-zA-Z0-9]+))'
+        'beginCaptures':
+          '1':
+            'name': 'punctuation.whitespace.comment.leading.roxygen.r'
+        'end': '(?!\\G)'
+        'patterns': [
+          {
+            'begin': '#\'[ ]*(@[a-zA-Z0-9]+)'
+            'beginCaptures':
+              '0':
+                'name': 'punctuation.definition.comment.roxygen.r'
+              '1':
+                'name': 'keyword.roxygen.r'
+            'end': '\\n'
+            'name': 'comment.line.number-sign.roxygen.r'
+          }
+        ]        
+      }
+      {
+        'captures':
+          '1':
+            'name': 'comment.line.pragma.r'
+          '2':
+            'name': 'entity.name.pragma.name.r'
+        'match': '^(#pragma[ \\t]+mark)[ \\t](.*)'
+        'name': 'comment.line.pragma-mark.r'
       }
     ]
   'operators':
@@ -343,6 +427,23 @@
         'name': 'string.quoted.double.r'
         'patterns': [
           {
+            'match': '\\\\0'
+            'name': 'invalid.illegal.nul.character.r'
+            'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
+          }
+          {
+            'include': '#constant_placeholder'
+          }
+          {
+            'include': '#escaped_unicode_char'
+          }
+          {
+            'include': '#escaped_char'
+          }
+          {
+            'include': '#regular_expressions'
+          }
+          {
             'match': '\\\\.'
             'name': 'constant.character.escape.r'
           }
@@ -359,6 +460,23 @@
             'name': 'punctuation.definition.string.end.r'
         'name': 'string.quoted.single.r'
         'patterns': [
+          {
+            'match': '\\\\0'
+            'name': 'invalid.illegal.nul.character.r'
+            'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
+          }
+          {
+            'include': '#constant_placeholder'
+          }
+          {
+            'include': '#escaped_unicode_char'
+          }
+          {
+            'include': '#escaped_char'
+          }
+          {
+            'include': '#regular_expressions'
+          }
           {
             'match': '\\\\.'
             'name': 'constant.character.escape.r'
