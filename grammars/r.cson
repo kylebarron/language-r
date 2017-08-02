@@ -179,6 +179,77 @@
     'match': '\\b(try|tryCatch|withCallingHandlers|signalCondition|simpleError|simpleWarning|simpleMessage)\\b'
     'name': 'keyword.control.exception.r'
   }
+  {
+    'include': '#functions'
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+      # 'match': '([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*'
+
+  # {
+  #   'comment': 'Highlight functions and function calls'
+  #   'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*\\s*\\()'
+  #   'end': '(\\))'
+  #   'endCaptures':
+  #     '1':
+  #       'name': 'punctuation.definition.arguments.end.r'
+  #   'name': 'support.function.r'
+  #   'patterns': [
+  #     {
+  #       'begin': '(?=[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*\\s*\\()'
+  #       'end': '(?=\\s*\\()'
+  #       'patterns': [
+  #         {
+  #           'include': '#dotted_name'
+  #         }
+  #       ]
+  #     }
+  #     {
+  #       'begin': '(\\()'
+  #       'beginCaptures':
+  #         '1':
+  #           'name': 'punctuation.definition.arguments.begin.r'
+  #       'contentName': 'variable.parameter.function.r'
+  #       'end': '(?=\\))'
+  #       'patterns': [
+  #         {
+  #           'include': '#keyword_arguments'
+  #         }
+  #         {
+  #           'include': '$self'
+  #         }
+  #       ]
+  #     }
+  #   ]
+  # }
+
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   # TO WORK ON !!!!
   # {
   #   'captures':
@@ -396,6 +467,36 @@
         'name': 'constant.character.escape.unicode.32-bit-hex.r'
     'match': '(\\\\u\\{?[0-9A-Fa-f]{4}\\}?)|(\\\\U\\{?[0-9A-Fa-f]{8}\\}?)'
     'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
+  'functions':
+    'patterns': [
+      {
+        'comment': 'Highlight functions and their arguments'
+        'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)(\\()'
+        'beginCaptures':
+          '1':
+            'name': 'support.function.r'
+          '3':
+            'name': 'punctuation.definition.parameters.begin.r'
+        'end': '(\\))'
+        'endCaptures':
+          '1':
+            'name': 'punctuation.definition.parameters.begin.r'
+        'patterns': [
+          {
+            'include': '#functions'
+          }
+          {
+            'include': '#keyword_arguments'
+          }
+          {
+            'include': '#function_arguments'
+          }
+          {
+            'include': '#strings'
+          }
+        ]
+      }
+    ]
   'function_name':
     'patterns': [
       {
