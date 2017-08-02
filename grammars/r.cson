@@ -171,7 +171,33 @@
     'include': '#strings'
   }
   {
-    'match': '\\b(function|break|next|return|in|invisible)\\b'
+    'begin': '(function)\\s*(\\()'
+    'beginCaptures':
+      '1': 
+        'name': 'keyword.control.r'
+      '2':
+        'name': 'punctuation.definition.parameters.begin.r'
+    'end': '(\\))'
+    'endCaptures':
+      '1':
+        'name': 'punctuation.definition.parameters.begin.r'
+    'patterns': [
+      {
+        'include': '#functions'
+      }
+      {
+        'include': '#keyword_arguments'
+      }
+      {
+        'include': '#function_arguments'
+      }
+      {
+        'include': '#strings'
+      }      
+    ]
+  }
+  {
+    'match': '\\b(break|next|return|in|invisible)\\b'
     'name': 'keyword.control.r'
   }
   {
@@ -471,7 +497,7 @@
     'patterns': [
       {
         'comment': 'Highlight functions and their arguments'
-        'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)(\\()'
+        'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*(\\()'
         'beginCaptures':
           '1':
             'name': 'support.function.r'
