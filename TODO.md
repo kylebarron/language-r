@@ -1,13 +1,24 @@
 
-[ ] Change if, else if to highlight () following it
-[ ] do same for: for, while
-[ ] look at brackets around :alpha: in regex
-[ ] Figure out which package makes python indentation work when inserting newline within function
+* [ ] Make function() syntax highlighting better. 
+    - In particular, 
+    ```r
+    foo <- function() {}
+    ```
+    Color foo as a function and get autocomplete to recognize it
+* [ ] Allow for arbitrary function names inside backticks
+* [ ] Allow for comments within function calls
+* [ ] Highlight Roxygen comments (look at RStudio)
+
+* [ ] Change if, else if to highlight () following it
+* [ ] do same for: for, while
+* [ ] look at brackets around :alpha: in regex
+* [ ] Figure out which package makes python indentation work when inserting newline within function
 
 
 Do I need this?
 when is there a function call like test()() ?
 This colors the second ()
+```coffeescript
 {
   'begin': '(?<=\\)|\\])\\s*(\\()'
   'beginCaptures':
@@ -28,3 +39,7 @@ This colors the second ()
     }
   ]
 }
+```
+```r
+2+2
+```
