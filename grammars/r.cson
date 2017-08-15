@@ -365,17 +365,8 @@
       }
     ]
   }
-  # {
-  #   'include': '#generic_names'
-  # }
-  # {
-  #   'include': '#illegal_names'
-  # }
 ]
 'repository':
-  'builtin_functions':
-    'match': '\\b(logical|numeric|character|complex|matrix|array|data\\.frame|list|factor)(?=\\s*\\()'
-    'name': 'support.type.r'    
   'builtin_types':
     'match': '\\b(logical|numeric|character|complex|matrix|array|data\\.frame|list|factor)(?=\\s*\\()'
     'name': 'support.type.r'
@@ -389,8 +380,6 @@
         'match': '\\b(?i:(0x\\h*))'
         'name': 'constant.numeric.integer.hexadecimal.python'
       }
-
-      
       {
         'match': '\\.[0-9]+((e|E)(\\+|-)?[0-9]+)?(i|L|l|UL|ul|u|U|F|f|ll|LL|ull|ULL)?\\b'
         'name': 'constant.numeric.r'
@@ -448,15 +437,6 @@
         'name': 'keyword.control.r'
       }
     ]
-  'entity_name_function':
-    'patterns': [
-      {
-        'include': '#illegal_names'
-      }
-      {
-        'include': '#generic_names'
-      }
-    ]
   'escaped_char':
     'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
     'captures':
@@ -496,7 +476,24 @@
   'functions':
     'patterns': [
       {
+        'comment': 'first highlight illegal functions'
+        'match': '\\b(if|else|repeat|while|function|for|in|next|break|TRUE|FALSE|NULL|Inf|NaN|NA|NA_integer_|NA_real_|NA_complex_|NA_character_|\\.\\.\\.|\\.\\.[0-9]+)\\b'
+        'name': 'invalid.illegal.name.reserved.r'
+        'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Reserved-words'        
+      }
+      # {
+      #   'match': '\\b([^a-zA-Z.][a-zA-Z0-9_.]*)\\s+(<-|=)'
+      #   'name': 'invalid.illegal.name.r'
+      #   'comment': 'must start with a letter or dot'
+      # }
+      # {
+      #   'match': '(\\s|\\n)+([.][0-9][a-zA-Z0-9_.]*)\\s+(<-|=)'
+      #   'name': 'invalid.illegal.name.r'
+      #   'comment': 'if it starts with a dot, it can\'t be followed by a number'
+      # }
+      {
         'comment': 'Highlight functions and their arguments'
+        'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Identifiers'
         'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*(\\()'
         'beginCaptures':
           '1':
@@ -522,40 +519,6 @@
           }
         ]
       }
-    ]
-  'function_name':
-    'patterns': [
-      {
-        'include': '#builtin_functions'
-      }
-      {
-        'include': '#builtin_types'
-      }
-      {
-        'include': '#generic_names'
-      }
-    ]
-  'generic_names':
-    'match': '([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*'
-    # 'name': 'keyword.variable.name.test.kyle.r'
-    'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Identifiers'
-  'illegal_names':
-    'patterns': [
-      {
-        'match': '\\b(if|else|repeat|while|function|for|in|next|break|TRUE|FALSE|NULL|Inf|NaN|NA|NA_integer_|NA_real_|NA_complex_|NA_character_|\\.\\.\\.|\\.\\.[0-9]+)\\b'
-        'name': 'invalid.illegal.name.reserved.r'
-        'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Reserved-words'
-      }
-      # {
-      #   'match': '\\b([^a-zA-Z.][a-zA-Z0-9_.]*)\\s+(<-|=)'
-      #   'name': 'invalid.illegal.name.r'
-      #   'comment': 'must start with a letter or dot'
-      # }
-      # {
-      #   'match': '(\\s|\\n)+([.][0-9][a-zA-Z0-9_.]*)\\s+(<-|=)'
-      #   'name': 'invalid.illegal.name.r'
-      #   'comment': 'if it starts with a dot, it can\'t be followed by a number'
-      # }
     ]
   'function_arguments':
     'begin': '\\b(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*'
