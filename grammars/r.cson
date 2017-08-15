@@ -342,13 +342,54 @@
         ]
       }
       {
+        'comment': 'control constructs that take arguments'
+        'begin': '(return|for|while)\\s*(\\()'
+        'beginCaptures':
+          '1':
+            'name': 'keyword.control.r'
+          '2':
+            'name': 'keyword.punctuation.block.begin.r'
+        'end': '(\\))'
+        'endCaptures':
+          '1':
+            'name': 'keyword.punctuation.block.begin.r'
+        'name': 'meta.block.r'
+        'patterns': [
+          {
+            'include': '$self'
+          }
+        ]
+      }
+      {
+        'begin': '(if|else\\s+if)\\s*(\\()'
+        'beginCaptures':
+          '1':
+            'name': 'keyword.control.conditional.r'
+          '2':
+            'name': 'keyword.punctuation.block.begin.r'
+        'end': '(\\))'
+        'endCaptures':
+          '1':
+            'name': 'keyword.punctuation.block.begin.r'
+        'name': 'meta.block.r'
+        'patterns': [
+          {
+            'include': '$self'
+          }
+        ]
+      }
+      {
+        'match': '\\b(break|next|in|invisible)\\b'
+        'name': 'keyword.control.r'
+      }
+      {
         'comment': 'keywords that delimit flow conditionals'
-        'match': '\\b(if|else)\\b'
+        'match': '\\b(else)\\b'
         'name': 'keyword.control.conditional.r'
       }
       {
         'comment': 'keywords that delimit loops'
-        'match': '\\b(for|while|repeat)\\b'
+        'match': '\\b(repeat)\\b'
         'name': 'keyword.control.repeat.r'
       }
       {
