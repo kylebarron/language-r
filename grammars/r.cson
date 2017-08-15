@@ -13,6 +13,32 @@
   {
     'include': '#comments'
   }
+  {
+    'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*(<-|=)\\s*(function)(\\()'
+    'beginCaptures':
+      '1':
+        'patterns': [
+          {
+            'include': '#illegal_names'
+          }
+        ]
+        'name': 'support.function.r'
+      '3':
+        'name': 'keyword.operator.assignment.r'
+      '4':
+        'name': 'keyword.control.r'
+      '5':
+        'name': 'punctuation.definition.parameters.begin.r'
+    'end': '(\\))'
+    'endCaptures':
+      '1':
+        'name': 'punctuation.definition.parameters.end.r'
+    'patterns': [
+      {
+        'include': '#function_internals'
+      }
+    ]
+  }
   # Regular Expressions:
   {
     'comment': 'Regex functions with pattern in first spot by default'
@@ -167,36 +193,6 @@
     'include': '#strings'
   }
   {
-    'begin': '(function)\\s*(\\()'
-    'beginCaptures':
-      '1': 
-        'name': 'keyword.control.r'
-      '2':
-        'name': 'punctuation.definition.parameters.begin.r'
-    'end': '(\\))'
-    'endCaptures':
-      '1':
-        'name': 'punctuation.definition.parameters.begin.r'
-    'patterns': [
-      {
-        'include': '#functions'
-      }
-      {
-        'include': '#keyword_arguments'
-      }
-      {
-        'include': '#function_arguments'
-      }
-      {
-        'include': '#strings'
-      }      
-    ]
-  }
-  {
-    'match': '\\b(break|next|return|in|invisible)\\b'
-    'name': 'keyword.control.r'
-  }
-  {
     'comment': 'keywords that delimit an exception'
     'match': '\\b(try|tryCatch|withCallingHandlers|signalCondition|simpleError|simpleWarning|simpleMessage)\\b'
     'name': 'keyword.control.exception.r'
@@ -204,93 +200,6 @@
   {
     'include': '#functions'
   }
-  
-  
-  
-  
-  
-  
-  
-  
-      # 'match': '([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*'
-
-  # {
-  #   'comment': 'Highlight functions and function calls'
-  #   'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*\\s*\\()'
-  #   'end': '(\\))'
-  #   'endCaptures':
-  #     '1':
-  #       'name': 'punctuation.definition.arguments.end.r'
-  #   'name': 'support.function.r'
-  #   'patterns': [
-  #     {
-  #       'begin': '(?=[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*\\s*\\()'
-  #       'end': '(?=\\s*\\()'
-  #       'patterns': [
-  #         {
-  #           'include': '#dotted_name'
-  #         }
-  #       ]
-  #     }
-  #     {
-  #       'begin': '(\\()'
-  #       'beginCaptures':
-  #         '1':
-  #           'name': 'punctuation.definition.arguments.begin.r'
-  #       'contentName': 'variable.parameter.function.r'
-  #       'end': '(?=\\))'
-  #       'patterns': [
-  #         {
-  #           'include': '#keyword_arguments'
-  #         }
-  #         {
-  #           'include': '$self'
-  #         }
-  #       ]
-  #     }
-  #   ]
-  # }
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  # TO WORK ON !!!!
-  # {
-  #   'captures':
-  #     '1':
-  #       'name': 'entity.name.function.r'
-  #   'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\('
-  # }
-  # {
-  #   'captures':
-  #     '1':
-  #       'name': 'entity.name.function.r'
-  #     '2':
-  #       'name': 'keyword.operator.assignment.r'
-  #     '3':
-  #       'name': 'keyword.control.r'
-  #   'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*(<-|=)\\s*(function)(\\()'
-  #   'name': 'meta.function.r'
-  # }
-  ## END TO WORK ON
   {
     'captures':
       '1':
@@ -300,21 +209,6 @@
     'match': '(setMethod|setReplaceMethod|setGeneric|setGroupGeneric|setClass)\\s*\\(\\s*([[A-Za-z]\\d]+\\s*=\\s*)?("|\\x{27})([a-zA-Z._\\[\\$@][a-zA-Z0-9._\\[]*?)\\3.*'
     'name': 'meta.method.declaration.r'
   }
-  {
-    'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*\\('
-  }
-  # {
-  #   'captures':
-  #     '1':
-  #       'name': 'variable.parameter.r'
-  #     '2':
-  #       'name': 'keyword.operator.assignment.r'
-  #   'match': '([[A-Za-z].][[0-9A-Za-z]._]*)\\s*(=)(?=[^=])'
-  # }
-  # {
-  #   'match': '\\b([\\d_][[0-9A-Za-z]._]+)\\b'
-  #   'name': 'invalid.illegal.variable.other.r'
-  # }
   {
     'match': '\\b([0-9A-Za-z_.]+)(::)'
     'captures':
@@ -498,24 +392,27 @@
         'name': 'constant.character.escape.unicode.32-bit-hex.r'
     'match': '(\\\\u\\{?[0-9A-Fa-f]{4}\\}?)|(\\\\U\\{?[0-9A-Fa-f]{8}\\}?)'
     'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
-  'functions':
+  'illegal_names':
     'patterns': [
       {
-        'comment': 'first highlight illegal functions'
+        'comment': 'first highlight illegal object names'
         'match': '\\b(if|else|repeat|while|function|for|in|next|break|TRUE|FALSE|NULL|Inf|NaN|NA|NA_integer_|NA_real_|NA_complex_|NA_character_|\\.\\.\\.|\\.\\.[0-9]+)\\b'
         'name': 'invalid.illegal.name.reserved.r'
         'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Reserved-words'        
       }
-      # {
-      #   'match': '\\b([^a-zA-Z.][a-zA-Z0-9_.]*)\\s+(<-|=)'
-      #   'name': 'invalid.illegal.name.r'
-      #   'comment': 'must start with a letter or dot'
-      # }
-      # {
-      #   'match': '(\\s|\\n)+([.][0-9][a-zA-Z0-9_.]*)\\s+(<-|=)'
-      #   'name': 'invalid.illegal.name.r'
-      #   'comment': 'if it starts with a dot, it can\'t be followed by a number'
-      # }
+    # {
+    #   'match': '\\b([^a-zA-Z.][a-zA-Z0-9_.]*)\\s+(<-|=)'
+    #   'name': 'invalid.illegal.name.r'
+    #   'comment': 'must start with a letter or dot'
+    # }
+    # {
+    #   'match': '(\\s|\\n)+([.][0-9][a-zA-Z0-9_.]*)\\s+(<-|=)'
+    #   'name': 'invalid.illegal.name.r'
+    #   'comment': 'if it starts with a dot, it can\'t be followed by a number'
+    # }
+    ]
+  'functions':
+    'patterns': [
       {
         'comment': 'Highlight functions and their arguments'
         'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Identifiers'
@@ -531,21 +428,31 @@
             'name': 'punctuation.definition.parameters.begin.r'
         'patterns': [
           {
-            'include': '#functions'
-          }
-          {
-            'include': '#keyword_arguments'
-          }
-          {
-            'include': '#function_arguments'
-          }
-          {
-            'include': '#strings'
+            'include': '#function_internals'
           }
         ]
       }
     ]
+  'function_internals':
+    'patterns': [
+      {
+        'include': '#functions'
+      }
+      {
+        'include': '#keyword_arguments'
+      }
+      {
+        'include': '#function_arguments'
+      }
+      {
+        'include': '#strings'
+      }
+      {
+        'include': '#comments'
+      }
+    ]
   'function_arguments':
+    'comment': 'this is for a function argument without an = sign'
     'begin': '\\b(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*'
     'beginCaptures':
       '1':
@@ -560,6 +467,7 @@
       }
     ]
   'keyword_arguments':
+    'comment': 'This is for a function argument with an ='
     'begin': '\\b(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*(=)(?!=)'
     'beginCaptures':
       '1':
@@ -571,20 +479,6 @@
       '1':
         'name': 'punctuation.separator.key-value.r'
     'patterns': [
-      # Unclear if I need to do includes by type or if $self is ok
-      # Had issues with regex strings everywhere, but I had included #regular_expressions in #strings
-      # {
-      #   'include': '#constants'
-      # }
-      # {
-      #   'include': '#strings'
-      # }
-      # {
-      #   'include': '#comments'
-      # }
-      # {
-      #   'include': '#operators'
-      # }
       {
         'include': '$self'
       }
