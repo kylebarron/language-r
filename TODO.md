@@ -8,6 +8,7 @@
 * [ ] Allow for arbitrary function names inside backticks
 * [ ] Allow for comments within function calls
 * [ ] Highlight Roxygen comments (look at RStudio)
+* [ ] Don't use syntax highlighting within a fixed() call
 
 * [ ] Change if, else if to highlight () following it
 * [ ] do same for: for, while

@@ -10,6 +10,9 @@
 ]
 'firstLineMatch': '^#![ \\t]*/.*\\bRscript\\b'
 'patterns': [
+  {
+    'include': '#comments'
+  }
   # Regular Expressions:
   {
     'comment': 'Regex functions with pattern in first spot by default'
@@ -147,11 +150,6 @@
       }
     ] 
   }
-    
-
-  {
-    'include': '#line_comments'
-  }
   {
     'include': '#constants'
   }
@@ -165,8 +163,6 @@
   {
     'include': '#operators'
   }
-  
-  
   {
     'include': '#strings'
   }
@@ -370,6 +366,35 @@
   'builtin_types':
     'match': '\\b(logical|numeric|character|complex|matrix|array|data\\.frame|list|factor)(?=\\s*\\()'
     'name': 'support.type.r'
+  'comments':
+    'patterns': [
+      {
+        'begin': '\\s*(#\')'
+        'beginCaptures':
+          '1':
+            'name': 'punctuation.definition.comment.roxygen.r'
+        'end': '\\n'
+        'name': 'comment.line.roxygen.r'
+        'patterns': [
+          {
+            'match': '(@[a-zA-Z0-9]+)'
+            'name': 'keyword.roxygen.r'
+          }
+          {
+            'match': '(\\\\[a-zA-Z0-9]+)'
+            'name': 'punctuation.definition.keyword.latex.r'
+          }
+        ]
+      }
+      {
+        'begin': '\\s*(#)'
+        'beginCaptures':
+          '1':
+            'name': 'punctuation.definition.comment.r'
+        'end': '\\n'
+        'name': 'comment.line.number-sign.r'
+      }
+    ]
   'constants':
     'patterns': [
       {
@@ -562,54 +587,6 @@
       # }
       {
         'include': '$self'
-      }
-    ]
-  'line_comments':
-    'patterns': [
-      {
-        'begin': '(^[ \\t]+)?(?=#\'?)'
-        'beginCaptures':
-          '1':
-            'name': 'punctuation.whitespace.comment.leading.r'
-        'end': '(?!\\G)'
-        'patterns': [
-          {
-            'begin': '#\'?'
-            'beginCaptures':
-              '0':
-                'name': 'punctuation.definition.comment.r'
-            'end': '\\n'
-            'name': 'comment.line.number-sign.r'
-          }
-        ]        
-      }
-      {
-        'begin': '(^[ \\t]+)?(?=#\'[ ]*(@[a-zA-Z0-9]+))'
-        'beginCaptures':
-          '1':
-            'name': 'punctuation.whitespace.comment.leading.roxygen.r'
-        'end': '(?!\\G)'
-        'patterns': [
-          {
-            'begin': '#\'[ ]*(@[a-zA-Z0-9]+)'
-            'beginCaptures':
-              '0':
-                'name': 'punctuation.definition.comment.roxygen.r'
-              '1':
-                'name': 'keyword.roxygen.r'
-            'end': '\\n'
-            'name': 'comment.line.number-sign.roxygen.r'
-          }
-        ]        
-      }
-      {
-        'captures':
-          '1':
-            'name': 'comment.line.pragma.r'
-          '2':
-            'name': 'entity.name.pragma.name.r'
-        'match': '^(#pragma[ \\t]+mark)[ \\t](.*)'
-        'name': 'comment.line.pragma-mark.r'
       }
     ]
   'operators':
