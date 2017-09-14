@@ -2,8 +2,5 @@
 
 A language package for [R](http://www.r-project.org).
 
-Originally imported from [r.tmbundle](https://github.com/textmate/r.tmbundle).
+This is a temporary fork before @lee-dohn transfers [language-r](https://github.com/lee-dohm/language-r) to REditorSupport. See https://github.com/lee-dohm/language-r/issues/25
 
-## Copyright
-
-Copyright &copy; 2014-2016 by [Lee Dohm](https://www.lee-dohm.com). See [LICENSE](https://github.com/lee-dohm/language-r/blob/master/LICENSE.md) for details.
