@@ -1,18 +1,20 @@
 'scopeName': 'source.r'
 'name': 'R'
-'fileTypes': [
-  'R'
-  'r'
-  's'
-  'S'
-  'Rprofile'
-  'Rhistory'
-]
+# 'fileTypes': [
+#   'R'
+#   'r'
+#   's'
+#   'S'
+#   'Rprofile'
+#   'Rhistory'
+# ]
 'firstLineMatch': '^#![ \\t]*/.*\\bRscript\\b'
 'patterns': [
   {
+    'include': '#comments'
+  }
+  {
     'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*(<-|=)\\s*(function)(\\()'
-    'end': '(\\))'
     'beginCaptures':
       '1':
         'patterns': [
@@ -27,6 +29,7 @@
         'name': 'keyword.control.r'
       '5':
         'name': 'punctuation.definition.parameters.begin.r'
+    'end': '(\\))'
     'endCaptures':
       '1':
         'name': 'punctuation.definition.parameters.end.r'
@@ -36,31 +39,149 @@
       }
     ]
   }
+  # Regular Expressions:
   {
-    'begin': '\\b(library|require)\\b\\s*(\\()'
-    'end': '(\\))'
+    'comment': 'Regex functions with pattern in first spot by default'
+    'comment': 'begin/end is function name and parentheses'
+    'begin': '\\b(grep|grepl|regexpr|gregexpr|sub|gsub|regexec|regex)(\\()'
     'beginCaptures':
       '1':
-        'name': 'keyword.control.import.r'
+        'name': 'entity.name.function.r'
       '2':
-        'name': 'punctuation.definition.parameters.begin.r'
+        'name': 'punctuation.definition.entity.begin.r'
+    'end': '(\\))'
     'endCaptures':
       '1':
-        'name': 'punctuation.definition.parameters.end.r'
+        'name': 'punctuation.definition.entity.end.r'
+    'name': 'meta.function.r'
     'patterns': [
+      # first, look for if there's an element that says pattern = "..."
       {
-        'include': '#function_internals'
+        'begin': '(pattern)\\s*(=)\\s*(?=("|\'))'
+        'beginCaptures':
+          '1':
+            'name': 'variable.parameter.function.r'
+          '2':
+            'name': 'keyword.operator.assignment.r'
+        'end': '\\s*(,|(?=\\))|\\n)'
+        # 'end': '\\s*(?:(,)|(?=$\\n?|[\\)\\:]))'
+        'endCaptures':
+          '1':
+            'name': 'punctuation.separator.key-value.r'
+        'patterns': [
+          {
+            'begin': '"|\''
+            'beginCaptures':
+              '0':
+                'name': 'punctuation.definition.string.begin.r'
+            'end': '"|\''
+            'endCaptures':
+              '0':
+                'name': 'punctuation.definition.string.end.r'
+            'patterns': [
+              {
+                'include': '#regular_expressions'
+              }
+            ]
+          }
+          {
+            'match': ','
+            'name': 'punctuation.separator.key-value.r'
+          }
+        ]
+      }
+      # Now hopefully look for the first spot
+      {
+        'begin': '(?<=\\()(?=("|\'))'
+        'end': '\\s*(?:(,)|(?=$\\n?|[\\)\\:]))'
+        'endCaptures':
+          '1':
+            'name': 'punctuation.separator.key-value.r'
+        'patterns': [
+          {
+            'begin': '"|\''
+            'beginCaptures':
+              '0':
+                'name': 'punctuation.definition.string.begin.r'
+            'end': '"|\''
+            'endCaptures':
+              '0':
+                'name': 'punctuation.definition.string.end.r'
+            'patterns': [
+              {
+                'include': '#regular_expressions'
+              }
+            ]
+          }
+        ]
+      }
+      {
+        'include': '#keyword_arguments'
+      }
+      {
+        'include': '#function_arguments'
+      }
+      {
+        'include': '#operators'
       }
     ]
   }
-  {
-    'include': 'builtin_types'
-  }
-  {
-    'include': '#comments'
-  }
+  # Functions with pattern in second spot:
+  # {
+  #   'comment': 'Regex functions with pattern in second spot by default'
+  #   'comment': 'This begin/end gets the function name and the outer parentheses'
+  #   'begin': '\\b(strsplit|stri_(count|detect|extract|locate|match|replace|split|startswith|endswith|subset)[_a-z]*|
+  #   str_(count|detect|split|subset|which)|str_(extract|locate|match|replace|view)(_all)?)(\\()'
+  #   'beginCaptures':
+  #     '1':
+  #       'name': 'entity.name.function.r'
+  #     '6':
+  #       'name': 'punctuation.definition.entity.begin.r'
+  #   'end': '(\\))'
+  #   'endCaptures':
+  #     '1':
+  #       'name': 'punctuation.definition.entity.end.r'
+  #   'name': 'meta.function.r'
+  #   'patterns': [
+  #     {
+  #       'comment': 'This begin should get the first function argument'
+  #       'comment': 'This '
+  #       'begin': '(.+)(,)'
+  #       'beginCaptures':
+  #         '1':
+  #           'patterns': [
+  #             {
+  #               'include': '#keyword_arguments'
+  #             }
+  #             {
+  #               'include': '#operators'
+  #             }
+  #           ]
+  #       'end': '(?=\\))'
+  #       'patterns': [
+  #         'begin': '(?=("|\'))'
+  #         'end': '(?![\\w])'
+  #         'endCaptures':
+  #           '1':
+  #             'name': 'punctuation.separator.parameters.r'
+  #         'patterns': [
+  #           {
+  #             'include': '#regular_expressions'
+  #           }
+  #         ]
+  #       ]
+  #     }
+  #     {
+  #       'include': '$self'
+  #     }
+  #   ] 
+  # }
   {
     'include': '#constants'
+  }
+  {
+    'match': '\\b(library|require)\\b'
+    'name': 'keyword.control.import.r'
   }
   {
     'include': '#control_constructs'
@@ -95,6 +216,17 @@
         'name': 'entity.namespace.r'
       '2':
         'name': 'keyword.operator.namespace.r'
+  }
+  {
+    'comment': 'empty vector c() NON FUNCTIONAL'
+    'captures':
+      '1':
+        'name': 'punctuation.definition.list.begin.r'
+      '2':
+        'name': 'meta.empty-list.r'
+      '3':
+        'name': 'punctuation.definition.list.end.r'
+    'match': '(c\\()(\\s*(\\)))\\b'
   }
   {
     'comment': 'NON FUNCTIONAL'
@@ -265,6 +397,42 @@
         'name': 'keyword.control.r'
       }
     ]
+  'escaped_char':
+    'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
+    'captures':
+      '1':
+        'name': 'constant.character.escape.hex.r'
+      '2':
+        'name': 'constant.character.escape.octal.r'
+      '3':
+        'name': 'constant.character.escape.newline.r'
+      '4':
+        'name': 'constant.character.escape.backlash.r'
+      '5':
+        'name': 'constant.character.escape.double-quote.r'
+      '6':
+        'name': 'constant.character.escape.single-quote.r'
+      '7':
+        'name': 'constant.character.escape.bell.r'
+      '8':
+        'name': 'constant.character.escape.backspace.r'
+      '9':
+        'name': 'constant.character.escape.formfeed.r'
+      '10':
+        'name': 'constant.character.escape.return.r'
+      '11':
+        'name': 'constant.character.escape.tab.r'
+      '12':
+        'name': 'constant.character.escape.vertical-tab.r'
+    'match': '(\\\\x[0-9A-Fa-f]{1,2})|(\\\\[0-7]{3})|(\\\\\\n)|(\\\\\\\\)|(\\\\\\")|(\\\\\')|(\\\\a)|(\\\\b)|(\\\\f)|(\\\\r)|(\\\\t)|(\\\\v)'
+  'escaped_unicode_char':
+    'captures':
+      '1':
+        'name': 'constant.character.escape.unicode.16-bit-hex.r'
+      '2':
+        'name': 'constant.character.escape.unicode.32-bit-hex.r'
+    'match': '(\\\\u\\{?[0-9A-Fa-f]{4}\\}?)|(\\\\U\\{?[0-9A-Fa-f]{8}\\}?)'
+    'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
   'illegal_names':
     'patterns': [
       {
@@ -290,12 +458,12 @@
         'comment': 'Highlight functions and their arguments'
         'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Identifiers'
         'begin': '(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*(\\()'
-        'end': '(\\))'
         'beginCaptures':
           '1':
-            'name': 'meta.function-call.r'
+            'name': 'support.function.r'
           '3':
             'name': 'punctuation.definition.parameters.begin.r'
+        'end': '(\\))'
         'endCaptures':
           '1':
             'name': 'punctuation.definition.parameters.begin.r'
@@ -309,7 +477,6 @@
   'function_internals':
     'patterns': [
       {
-        'comment': 'for nested functions'
         'include': '#functions'
       }
       {
@@ -330,7 +497,7 @@
     'begin': '\\b(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*'
     'beginCaptures':
       '1':
-        'name': 'meta.function-call.arguments.r'
+        'name': 'variable.parameter.function.r'
     'end': '\\s*(?:(,)|(?=$\\n?|[\\)\\:]))'
     'endCaptures':
       '1':
@@ -345,7 +512,7 @@
     'begin': '\\b(([a-zA-Z]|\\.(?![0-9]))[a-zA-Z0-9._]*)\\s*(=)(?!=)'
     'beginCaptures':
       '1':
-        'name': 'meta.function-call.arguments.r'
+        'name': 'variable.parameter.function.r'
       '3':
         'name': 'keyword.operator.assignment.r'
     'end': '\\s*(?:(,)|(?=$\\n?|[\\)\\:]))'
@@ -410,6 +577,9 @@
             'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
           }
           {
+            'include': '#constant_placeholder'
+          }
+          {
             'include': '#escaped_unicode_char'
           }
           {
@@ -438,6 +608,9 @@
             'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
           }
           {
+            'include': '#constant_placeholder'
+          }
+          {
             'include': '#escaped_unicode_char'
           }
           {
@@ -450,40 +623,3 @@
         ]
       }
     ]
-  'escaped_char':
-    'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
-    'captures':
-      '1':
-        'name': 'constant.character.escape.hex.r'
-      '2':
-        'name': 'constant.character.escape.octal.r'
-      '3':
-        'name': 'constant.character.escape.newline.r'
-      '4':
-        'name': 'constant.character.escape.backlash.r'
-      '5':
-        'name': 'constant.character.escape.double-quote.r'
-      '6':
-        'name': 'constant.character.escape.single-quote.r'
-      '7':
-        'name': 'constant.character.escape.bell.r'
-      '8':
-        'name': 'constant.character.escape.backspace.r'
-      '9':
-        'name': 'constant.character.escape.formfeed.r'
-      '10':
-        'name': 'constant.character.escape.return.r'
-      '11':
-        'name': 'constant.character.escape.tab.r'
-      '12':
-        'name': 'constant.character.escape.vertical-tab.r'
-    'match': '(\\\\x[0-9A-Fa-f]{1,2})|(\\\\[0-7]{3})|(\\\\\\n)|(\\\\\\\\)|(\\\\\\")|(\\\\\')|(\\\\a)|(\\\\b)|(\\\\f)|(\\\\r)|(\\\\t)|(\\\\v)'
-  'escaped_unicode_char':
-    'captures':
-      '1':
-        'name': 'constant.character.escape.unicode.16-bit-hex.r'
-      '2':
-        'name': 'constant.character.escape.unicode.32-bit-hex.r'
-    'match': '(\\\\u\\{?[0-9A-Fa-f]{4}\\}?)|(\\\\U\\{?[0-9A-Fa-f]{8}\\}?)'
-    'comment': 'https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Special-operators'
-
